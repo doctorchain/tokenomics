@@ -1,5 +1,5 @@
-const Ownable = artifacts.require('Ownable.sol')
+const DoctorToken = artifacts.require('DoctorToken.sol')
 
 module.exports = function(deployer) {
-    deployer.deploy(Ownable)
+    deployer.deploy(DoctorToken, 'Doctor Token', 'DOC', 18)
 }

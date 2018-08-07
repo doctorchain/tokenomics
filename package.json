@@ -40,11 +40,13 @@
     "eslint-plugin-promise": "3.7.0",
     "ganache-cli": "6.1.0",
     "solidity-coverage": "0.5.2",
-    "solium": "1.1.7"
+    "solium": "1.1.7",
+    "truffle-assertions": "^0.3.1"
   },
   "dependencies": {
     "dotenv": "5.0.1",
     "ethereumjs-wallet": "0.6.0",
+    "openzeppelin-solidity": "1.12.0-rc.1",
     "truffle-wallet-provider": "0.0.5"
   }
 }

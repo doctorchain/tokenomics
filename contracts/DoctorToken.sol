@@ -8,24 +8,25 @@ import "openzeppelin-solidity/contracts/token/ERC20/ERC20.sol";
 contract DoctorToken is ERC20, Ownable {
     using SafeMath for uint256;
 
+    uint256 constant private MAX_UINT256 = 2 ** 256 - 1;
     string public name;
     string public symbol;
     uint8 public decimals;
     mapping(address => uint256) internal balances;
-    uint256 internal totalSupply_;
+    uint256 internal total;
     mapping(address => mapping(address => uint256)) internal allowed;
 
-    constructor(string _name, string _symbol, uint8 _decimals) public {
+    constructor(string _name, string _symbol, uint256 _total, uint8 _decimals) public {
         name = _name;
         symbol = _symbol;
         decimals = _decimals;
-        totalSupply_ = 1000000 * 10 ** uint(decimals);
-        balances[owner] = totalSupply_;
-        emit Transfer(address(0), owner, totalSupply_);
+        total = _total;
+        balances[owner] = total;
+        emit Transfer(address(0), owner, total);
     }
 
-    function totalSupply() public view returns (uint) {
-        return totalSupply_;
+    function totalSupply() public view returns (uint256) {
+        return total;
     }
 
     function balanceOf(address _owner) public view returns (uint256 balance) {
@@ -49,13 +50,16 @@ contract DoctorToken is ERC20, Ownable {
     }
 
     function transferFrom(address _from, address _to, uint _value) public returns (bool success) {
+        uint256 allowance = allowed[_from][msg.sender];
         require(_value <= balances[_from]);
-        require(_value <= allowed[_from][msg.sender]);
+        require(_value <= allowance);
         require(_to != address(0));
 
         balances[_from] = balances[_from].sub(_value);
         balances[_to] = balances[_to].add(_value);
-        allowed[_from][msg.sender] = allowed[_from][msg.sender].sub(_value);
+        if (allowance < MAX_UINT256) {
+            allowed[_from][msg.sender] -= _value;
+        }
         emit Transfer(_from, _to, _value);
         return true;
     }

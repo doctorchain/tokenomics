@@ -32,11 +32,12 @@ module.exports = {
         ]
     },
     "globals": {
-      "web3": true,
-      "contract": true,
-      "Buffer": true,
-      "process": true,
-      "assert": true,
-      "artifacts": true
+        "web3": true,
+        "contract": true,
+        "Buffer": true,
+        "process": true,
+        "assert": true,
+        "artifacts": true,
+        "it": true
     }
 }

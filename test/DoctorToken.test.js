@@ -79,6 +79,11 @@ contract('DoctorToken', function (accounts) {
         assert.closeTo(ethBalanceAfter.toNumber(), ethBalanceBefore.toNumber(), 4600000)
     })
 
+    it('should reject the transfer to the invalid address', async () => {
+        let invalidAddress = '0x0'
+        await assertRevert(doc.transfer(invalidAddress, 10000))
+    })
+
     it('should able to transfer expected amount to target account', async () => {
         let targetAccount = accounts[1]
         let tx = await doc.transfer(targetAccount, 10000)
@@ -123,7 +128,7 @@ contract('DoctorToken', function (accounts) {
     it('should able to transferFrom within approved amount', async () => {
         await doc.approve(spender, 10000, {from: creator})
 
-        let tx = await doc.transferFrom(creator, spender, 10000, {from: spender});
+        let tx = await doc.transferFrom(creator, spender, 10000, {from: spender})
 
         assert.strictEqual((await doc.allowance(creator, spender)).toNumber(), 0)
         assert.strictEqual((await doc.balanceOf(spender)).toNumber(), 10000)
@@ -165,6 +170,13 @@ contract('DoctorToken', function (accounts) {
         await doc.approve(spender, 10000, {from: creator})
 
         assertRevert(doc.transferFrom(creator, spender, 20, {from: spender}))
+    })
+
+
+    it('should reject the transferFrom to the invalid address', async () => {
+        await doc.approve(spender, 10000, {from: creator})
+        let invalidAddress = '0x0'
+        await assertRevert(doc.transferFrom(creator, invalidAddress, 20, {from: spender}))
     })
 
     it('should not change the approval quota when the approval quota above the max int', async () => {
